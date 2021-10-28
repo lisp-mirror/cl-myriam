@@ -37,13 +37,18 @@
   (unless (typep *target-public-identity* 'public-identity)
     (signal (make-condition 'target-identity-not-set)))
   (setf (message-context msg) context)
-  (with-client-socket socket
-    (pzmq:connect socket actor)
-    (pzmq:send socket (conspack:encode msg))
-    (let ((response (conspack:decode (pzmq:recv-octets socket))))
-      (if (typep response 'condition)
-          (signal response)
-          response))))
+  (pzmq:with-context nil
+    (pzmq:with-socket socket
+        (:req
+         :curve-publickey (self-identity-public-key *current-self-identity*)
+         :curve-secretkey (self-identity-secret-key *current-self-identity*)
+         :curve-serverkey (public-identity-key *target-public-identity*))
+      (pzmq:connect socket actor)
+      (pzmq:send socket (conspack:encode msg))
+      (let ((response (conspack:decode (pzmq:recv-octets socket))))
+        (if (typep response 'condition)
+            (signal response)
+            response)))))
 
 (-> send (string message) *)
 (defun send (actor msg)

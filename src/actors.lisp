@@ -43,14 +43,19 @@
           (values *self* thread)))))
 
 (defun actor-loop ()
-  (with-server-socket socket
-    (pzmq:bind socket (address->binding *self*))
-    (loop for raw-msg = (pzmq:recv-octets socket)
-          do (let ((msg (conspack:decode raw-msg)))
-               (multiple-value-bind (proc continue?) (message-handle msg)
-                 (pzmq:send socket (conspack:encode (funcall proc)))
-                 (unless continue?
-                   (return)))))))
+  (pzmq:with-context nil
+    (pzmq:with-socket socket
+        (:rep
+         :curve-server 1
+         :curve-publickey (self-identity-public-key *current-self-identity*)
+         :curve-secretkey (self-identity-secret-key *current-self-identity*))
+      (pzmq:bind socket (address->binding *self*))
+      (loop for raw-msg = (pzmq:recv-octets socket)
+            do (let ((msg (conspack:decode raw-msg)))
+                 (multiple-value-bind (proc continue?) (message-handle msg)
+                   (pzmq:send socket (conspack:encode (funcall proc)))
+                   (unless continue?
+                     (return))))))))
 
 ;;;
 ;;; Message handling
