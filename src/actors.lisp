@@ -3,11 +3,6 @@
 (defparameter *self* nil)
 (defparameter *actions* nil)
 (defparameter *storage* nil)
-(defparameter *self-identity* nil)
-(defparameter *trust-store* (make-hash-table :test #'equal))
-(defparameter *trust-store-lock* (bt:make-lock "trust-store-lock"))
-(defparameter *target-public-identity* nil)
-(defparameter *current-self-identity* nil)
 
 ;;;
 ;;; Storage

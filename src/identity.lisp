@@ -1,5 +1,10 @@
 (in-package :myriam)
 
+(defparameter *trust-store* (make-hash-table :test #'equal))
+(defparameter *trust-store-lock* (bt:make-lock "trust-store-lock"))
+(defparameter *target-public-identity* nil)
+(defparameter *current-self-identity* nil)
+
 (defclass public-identity ()
   ((public-key
     :initarg :public-key
