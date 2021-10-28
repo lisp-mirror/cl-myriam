@@ -12,6 +12,7 @@
                :usocket
                :sha3)
   :encoding :utf-8
+  :serial t
   :components
   ((:file "package")
    (:module "src"
@@ -21,14 +22,17 @@
      (:file "address")
      (:file "conditions")
      (:file "identity")
-     (:file "action")))))
+     (:file "action"))))
+  :in-order-to ((asdf:test-op (asdf:test-op :cl-myriam/test))))
 
 (asdf:defsystem cl-myriam/test
   :description "Tests for cl-myriam"
   :depends-on (:cl-myriam
                :fiveam)
   :encoding :utf-8
+  :serial t
   :components
   ((:module "tests"
     :components
-    ((:file "run")))))
+    ((:file "run"))))
+  :perform (asdf:test-op (o c) (uiop:symbol-call :5am :run! :myriam)))
