@@ -18,7 +18,12 @@
   ((:file "packages")
    (:module "src"
     :components
-    ((:file "actors")))))
+    ((:file "actors")
+     (:file "messaging")
+     (:file "address")
+     (:file "conditions")
+     (:file "identity")
+     (:file "action")))))
 
 (asdf:defsystem cl-myriam/test
   :description "Tests for cl-myriam"
