@@ -1,4 +1,4 @@
-(in-package #:myriam)
+(in-package :myriam)
 
 (define-condition invalid-message (error) ()
   (:documentation "An invalid message received/attemped to be sent."))

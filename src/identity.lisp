@@ -1,4 +1,4 @@
-(in-package #:myriam)
+(in-package :myriam)
 
 (defclass public-identity ()
   ((public-key

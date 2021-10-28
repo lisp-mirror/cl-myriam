@@ -1,4 +1,4 @@
-(in-package #:cl-user)
+(in-package :cl-user)
 (asdf:defsystem cl-myriam
   :description "Simple actor model implementation for local and non-local actors"
   :licence "lgpl3"
@@ -6,12 +6,11 @@
   :author "Ariela Wenner"
   :depends-on (:bordeaux-threads
                :cl-conspack
+               :fiveam ; TODO: find out why I can't load the myriam/test system without this here
                :pzmq
                :serapeum
                :str
                :usocket
-               :fiveam
-               :qbase64
                :sha3)
   :encoding :utf-8
   :components
@@ -28,8 +27,7 @@
 (asdf:defsystem cl-myriam/test
   :description "Tests for cl-myriam"
   :depends-on (:cl-myriam
-               :fiveam
-               :bordeaux-threads)
+               :fiveam)
   :encoding :utf-8
   :components
   ((:file "packages")

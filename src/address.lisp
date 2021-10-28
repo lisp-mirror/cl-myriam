@@ -1,4 +1,4 @@
-(in-package #:myriam)
+(in-package :myriam)
 
 (-> make-random-port () integer)
 (defun make-random-port ()

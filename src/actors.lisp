@@ -1,4 +1,4 @@
-(in-package #:myriam)
+(in-package :myriam)
 
 (defparameter *self* nil)
 (defparameter *actions* nil)

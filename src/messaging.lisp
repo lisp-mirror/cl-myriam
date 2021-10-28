@@ -1,4 +1,4 @@
-(in-package #:myriam)
+(in-package :myriam)
 
 (defun message-context-p (x)
   (or (eq x :async)

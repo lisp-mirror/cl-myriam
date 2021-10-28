@@ -1,4 +1,4 @@
-(in-package #:myriam/test)
+(in-package :myriam/test)
 
 (def-suite :myriam)
 (in-suite :myriam)
