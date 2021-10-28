@@ -1,4 +1,4 @@
-(in-package #:myriam/actors)
+(in-package #:myriam)
 
 (defparameter *self* nil)
 (defparameter *actions* nil)
@@ -43,22 +43,24 @@
           do (setf (gethash (action-name action) *actions*) action))
     (with-actor-parameters
         (let ((thread (bt:make-thread
-                       (lambda ()
-                         (pzmq:with-context nil
-                           (pzmq:with-socket socket
-                               (:rep
-                                :curve-server 1
-                                :curve-publickey (self-identity-public-key *current-self-identity*)
-                                :curve-secretkey (self-identity-secret-key *current-self-identity*))
-                             (pzmq:bind socket (address->binding *self*))
-                             (loop for raw-msg = (pzmq:recv-octets socket)
-                                   do (let ((msg (conspack:decode raw-msg)))
-                                        (multiple-value-bind (proc continue?) (message-handle msg)
-                                          (pzmq:send socket (conspack:encode (funcall proc)))
-                                          (unless continue?
-                                            (return))))))))
+                       #'actor-loop
                        :name (concatenate 'string "actor-" *self*))))
           (values *self* thread)))))
+
+(defun actor-loop ()
+  (pzmq:with-context nil
+    (pzmq:with-socket socket
+        (:rep
+         :curve-server 1
+         :curve-publickey (self-identity-public-key *current-self-identity*)
+         :curve-secretkey (self-identity-secret-key *current-self-identity*))
+      (pzmq:bind socket (address->binding *self*))
+      (loop for raw-msg = (pzmq:recv-octets socket)
+            do (let ((msg (conspack:decode raw-msg)))
+                 (multiple-value-bind (proc continue?) (message-handle msg)
+                   (pzmq:send socket (conspack:encode (funcall proc)))
+                   (unless continue?
+                     (return))))))))
 
 ;;;
 ;;; Message handling
