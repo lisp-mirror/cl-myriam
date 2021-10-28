@@ -22,7 +22,8 @@
      (:file "address")
      (:file "conditions")
      (:file "identity")
-     (:file "action"))))
+     (:file "action")
+     (:file "socket"))))
   :in-order-to ((asdf:test-op (asdf:test-op :cl-myriam/test))))
 
 (asdf:defsystem cl-myriam/test
