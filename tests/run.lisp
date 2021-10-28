@@ -1,3 +1,8 @@
+(defpackage :myriam/test
+  (:import-from :5am :def-suite :in-suite :test :is)
+  (:export :run-tests)
+  (:use :cl :myriam))
+
 (in-package :myriam/test)
 
 (def-suite :myriam)
@@ -5,6 +10,9 @@
 
 (setf myr:*current-self-identity* (myr:make-self-identity))
 (setf myr:*target-public-identity* (myr:self->public-identity myr:*current-self-identity*))
+
+(defun run-tests ()
+  (5am:run! :myriam))
 
 (test actor-spawn
   (let ((actor (spawn)))

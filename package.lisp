@@ -13,7 +13,3 @@
            :*target-public-identity* :*current-self-identity*
            :make-self-identity :self->public-identity)
   (:use :cl))
-
-(defpackage :myriam/test
-  (:import-from :5am :def-suite :in-suite :test :is)
-  (:use :cl :myriam))

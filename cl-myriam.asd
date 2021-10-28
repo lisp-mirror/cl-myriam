@@ -6,7 +6,6 @@
   :author "Ariela Wenner"
   :depends-on (:bordeaux-threads
                :cl-conspack
-               :fiveam ; TODO: find out why I can't load the myriam/test system without this here
                :pzmq
                :serapeum
                :str
@@ -14,7 +13,7 @@
                :sha3)
   :encoding :utf-8
   :components
-  ((:file "packages")
+  ((:file "package")
    (:module "src"
     :components
     ((:file "actors")
@@ -30,7 +29,6 @@
                :fiveam)
   :encoding :utf-8
   :components
-  ((:file "packages")
-   (:module "tests"
+  ((:module "tests"
     :components
     ((:file "run")))))
