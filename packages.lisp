@@ -9,6 +9,7 @@
   (:import-from #:qbase64 #:encode-bytes)
   (:import-from #:sha3 #:sha3-digest-vector)
   (:export #:action #:msg #:spawn #:send #:send* #:*self*
+           #:with-self-identity #:with-target-identity
            #:*target-public-identity* #:*current-self-identity*
            #:make-self-identity #:self->public-identity)
   (:use #:cl #:bordeaux-threads))
