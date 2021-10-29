@@ -1,8 +1,8 @@
 (in-package :cl-user)
 (asdf:defsystem cl-myriam
   :description "Simple actor model implementation for local and non-local actors"
-  :licence "lgpl3"
-  :version "0.0.1"
+  :licence "3-clause BSD"
+  :version "0.1.0"
   :author "Ariela Wenner"
   :depends-on (:bordeaux-threads
                :cl-conspack
