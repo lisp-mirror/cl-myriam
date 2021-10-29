@@ -83,8 +83,8 @@
               (with-actor-parameters
                   ;; we don't care about errors inside the task execution thread
                   (bt:make-thread
-                   (ignore-errors
-                    (lambda ()
+                   (lambda ()
+                     (ignore-errors
                       (apply task (message-body message))))))
               'ok))
     (:sync (lambda ()
