@@ -6,6 +6,7 @@
   :author "Ariela Wenner"
   :depends-on (:bordeaux-threads
                :cl-conspack
+               :lparallel
                :pzmq
                :serapeum
                :str
@@ -17,12 +18,13 @@
   ((:file "package")
    (:module "src"
     :components
-    ((:file "actors")
-     (:file "messaging")
-     (:file "address")
+    ((:file "utils")
      (:file "conditions")
+     (:file "address")
      (:file "identity")
-     (:file "action"))))
+     (:file "messaging")
+     (:file "action")
+     (:file "actors"))))
   :in-order-to ((asdf:test-op (asdf:test-op :cl-myriam/test))))
 
 (asdf:defsystem cl-myriam/test

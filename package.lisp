@@ -6,8 +6,9 @@
   (:import-from :str :split)
   (:import-from :conspack :encode :decode)
   ;; am i importing serapeum just to use its pretty -> type declaration syntax? yes. yes i am.
-  (:import-from :serapeum :->)
+  (:import-from :serapeum :-> :count-cpus)
   (:import-from :sha3 :sha3-digest-vector)
+  (:import-from :lparallel :*kernel* :make-kernel :make-channel :submit-task :try-receive-result)
   (:export :action :msg :spawn :send :send* :*self*
            :with-self-identity :with-target-identity
            :*target-public-identity* :*current-self-identity*
