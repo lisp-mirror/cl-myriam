@@ -35,7 +35,7 @@ Spawn an actor and return its address and thread. If no actions are specified, t
 
 `(action name task &optional context) -> action`
 
-Create an action for an actor definition. `name` should be a keyword. `task` should be a function with any number of arguments (or no arguments). `context` should be either `:sync`, `:async` or `:any` and defaults to `:async`; it specifies the context in which a task can be executed, e.g. `:sync` tasks will be executed synchronously and it's what you'll want of you expect to get a value out of them.
+Create an action for an actor definition. `name` should be a keyword. `task` should be a function with any number of arguments (or no arguments). `context` should be either `:sync`, `:async` or `:any` and defaults to `:async`; it specifies the context in which a task can be executed, e.g. `:sync` tasks will be executed synchronously and it's what you'll want if you expect to get a value out of them.
 
 ## `msg`
 
@@ -49,13 +49,13 @@ Create a message to be sent to an actor. `head` should be a keyword correspondin
 
 `(send* address msg) -> (or * (values nil nil))`
 
-Send a message to an actor to be executed either in an asynchronous (`send`) or synchronous (`sync*`) context. `msg` should correspond in context, task name and number of arguments with the target task.
+Send a message to an actor to be executed either in an asynchronous (`send`) or synchronous (`send*`) context. `msg` should correspond in context, task name and number of arguments with the target task.
 
 ## About identities
 
 Identities encapsulate encryption keys. A `self-identity` contains both a public and secret key, while a `public-identity` contains only a public key.
 
-Actors are spawned with the `self-identity` inside `*current-self-identity*`. Outgoing messages need `*target-public-identity*` to be set with a `public-identity` for encryption.
+Actors are spawned with the `self-identity` inside `*current-self-identity*` (which means that many actors can share the same identity, if you want). Outgoing messages need `*target-public-identity*` to be set with a `public-identity` for encryption.
 
 ### `make-self-identity`
 
@@ -115,6 +115,6 @@ Dynamic variable useful for referring to an actor's self address.
 
 ## Current limitations/caveats
 
-* Sending your own classes inside a message requires you to define the methods `encode-object` and `decode-object`. See https://github.com/conspack/cl-conspack#clos-and-general-objects for more details.
+* Sending your own classes inside a message requires you to define the methods `encode-object` and `decode-object`. See https://github.com/conspack/cl-conspack#clos-and-general-objects for more details, it's easier than it sounds.
 * Synchronous messages block execution of an actor for the duration of the task.
-* No assumptions are made about key distribution and service (actor) discovery mechanisms.
+* No assumptions are made about identity distribution and service (actor) discovery mechanisms.
