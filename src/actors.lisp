@@ -3,17 +3,26 @@
 (defparameter *self* nil)
 (defparameter *actions* nil)
 (defparameter *storage* nil)
+(defparameter *storage-lock* (bt:make-lock "storage lock"))
 
 ;;;
 ;;; Storage
 ;;;
+;;; protect storage access inside an actor,
+;;; since different tasks may access it concurrently
 (-> fetch-value* (keyword) *)
 (defun fetch-value* (key)
-  (gethash key *storage*))
+  (bt:acquire-lock *storage-lock*)
+  (unwind-protect
+       (gethash key *storage*)
+    (bt:release-lock *storage-lock*)))
 
 (-> store-value* (keyword *) *)
 (defun store-value* (key value)
-  (setf (gethash key *storage*) value))
+  (bt:acquire-lock *storage-lock* t)
+  (unwind-protect
+       (setf (gethash key *storage*) value)
+    (bt:release-lock *storage-lock*)))
 
 ;;;
 ;;; Actor spawning
