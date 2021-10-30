@@ -32,7 +32,7 @@
            `((*self* . ,*self*)
              (*storage* . ,*storage*)
              (*actions* . ,*actions*)
-             (*current-self-identity* . *current-self-identity*))))
+             (*current-self-identity* . ,*current-self-identity*))))
      ,@body))
 
 (-> spawn (&rest action) (values string bt:thread))
