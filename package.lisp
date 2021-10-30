@@ -9,8 +9,10 @@
   (:import-from :serapeum :-> :count-cpus)
   (:import-from :sha3 :sha3-digest-vector)
   (:import-from :lparallel :*kernel* :make-kernel :make-channel :submit-task :try-receive-result)
+  (:import-from :ppcre :create-scanner :scan-to-strings)
   (:export :action :msg :spawn :send :send* :*self*
            :with-self-identity :with-target-identity
            :*target-public-identity* :*current-self-identity*
-           :make-self-identity :self->public-identity)
+           :make-self-identity :self->public-identity
+           :change-host)
   (:use :cl))

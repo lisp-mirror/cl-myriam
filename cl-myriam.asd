@@ -6,6 +6,7 @@
   :author "Ariela Wenner"
   :depends-on (:bordeaux-threads
                :cl-conspack
+               :cl-ppcre
                :lparallel
                :pzmq
                :serapeum

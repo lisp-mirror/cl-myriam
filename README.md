@@ -111,6 +111,14 @@ Fetch a value from an actor's internal storage, or `nil` of there is no such val
 
 Dynamic variable useful for referring to an actor's self address.
 
+## Utilities
+
+### `change-host`
+
+`(change-host address new-host) -> valid-address`
+
+Replace the host in `address` for `new-host`.
+
 # Notes
 
 ## Current limitations/caveats
