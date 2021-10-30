@@ -5,8 +5,10 @@
   (ppcre:create-scanner
    '(:sequence
      "tcp://"
+     ;; TODO: allows bogus hostnames e.g. "whatever..theheck"
      (:greedy-repetition 1 nil (:alternation "." :digit-class :word-char-class))
      ":"
+     ;; TODO: allows bogus ports > 65535
      (:greedy-repetition 1 5 :digit-class))))
 
 (defun address-p (obj)

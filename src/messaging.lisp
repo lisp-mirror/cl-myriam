@@ -31,7 +31,7 @@
   (make-instance 'message :head head :body body))
 
 
-(-> post (string message &key (:context message-context-t)) *)
+(-> post (valid-address message &key (:context message-context-t)) *)
 (defun post (actor msg &key (context :async))
   "send a message to an actor"
   (unless (typep *target-public-identity* 'public-identity)
@@ -51,12 +51,12 @@
               (signal response)
               response))))))
 
-(-> send (string message) *)
+(-> send (valid-address message) *)
 (defun send (actor msg)
   "send a message to an actor to perform an asychronous task"
   (post actor msg :context :async))
 
-(-> send* (string message) *)
+(-> send* (valid-address message) *)
 (defun send* (actor msg)
   "send a message to an actor to perform a synchronous task and get a result"
   (post actor msg :context :sync))
