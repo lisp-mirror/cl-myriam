@@ -31,6 +31,7 @@
   `(let ((bt:*default-special-bindings*
            `((*self* . ,*self*)
              (*storage* . ,*storage*)
+             (*storage-lock* . ,*storage-lock*)
              (*actions* . ,*actions*)
              (*current-self-identity* . ,*current-self-identity*))))
      ,@body))
