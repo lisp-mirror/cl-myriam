@@ -16,12 +16,12 @@
 
 (test actor-spawn
   (let ((actor (spawn)))
-    (is (eq 'myriam::pong (send* actor (msg :ping))))
-    (is (eq 'myriam::ok (send actor (msg :stop))))))
+    (is (eq :pong (send* actor (msg :ping))))
+    (is (eq :ok (send actor (msg :stop))))))
 
 (test async-message
   (let ((actor (spawn (action :something (lambda () 42) :async))))
-    (is (eq 'myriam::ok (send actor (msg :something))))
+    (is (eq :ok (send actor (msg :something))))
     (send actor (msg :stop))))
 
 (test sync-message

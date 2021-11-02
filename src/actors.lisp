@@ -61,29 +61,32 @@
          :curve-secretkey (self-identity-secret-key *current-self-identity*))
       (pzmq:bind socket (address->binding *self*))
       (loop for raw-msg = (pzmq:recv-octets socket)
-            do (let ((msg (conspack:decode raw-msg)))
-                 (multiple-value-bind (proc continue?) (message-handle msg)
-                   (pzmq:send socket (conspack:encode (funcall proc)))
-                   (unless continue?
-                     (return))))))))
+            do (handler-case (let ((msg (conspack:decode raw-msg)))
+                               (multiple-value-bind (proc continue?) (message-handle msg)
+                                 (pzmq:send socket (conspack:encode (funcall proc)))
+                                 (unless continue?
+                                   (return))))
+                 (error (c)
+                   (declare (ignore c))
+                   (pzmq:send socket (conspack:encode :internal-error))))))))
 
 ;;;
 ;;; Message handling
 ;;;
 (-> message-handle (message) (values function boolean))
 (defun message-handle (obj)
-  (let ((default (lambda () 'OK)))
+  (let ((default (lambda () :ok)))
     (if (valid-message-p obj)
         (case (message-head obj)
-          (:ping (values (lambda () 'pong) t))
+          (:ping (values (lambda () :pong) t))
           (:fetch (values (wrap-task #'fetch-value* obj) t))
           (:store (values (wrap-task #'store-value* obj) t))
           (:stop (values default nil))
           (otherwise (let ((action (gethash (message-head obj) *actions*)))
                        (if action
                            (values (wrap-task (action-task action) obj) t)
-                           (values (lambda () 'not-found) t)))))
-        (values (lambda () 'invalid-message) t))))
+                           (values (lambda () :not-found) t)))))
+        (values (lambda () :invalid-message) t))))
 
 (-> wrap-task (function message) function)
 (defun wrap-task (task message)
@@ -96,13 +99,13 @@
                    (lambda ()
                      (ignore-errors
                       (apply task (message-body message))))))
-              'ok))
+              :ok))
     (:sync (lambda ()
              (handler-case (apply task (message-body message))
                ;; simply return the condition to the caller actor so it can be thrown there
                (error (e)
                  e))))
-    (t (lambda () 'invalid-message)))) ; should never happen, but...
+    (t (lambda () :invalid-message)))) ; should never happen, but...
 
 (-> valid-message-p (message) boolean)
 (defun valid-message-p (msg)
