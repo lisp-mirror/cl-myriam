@@ -82,10 +82,8 @@
           (:fetch (values (wrap-task #'fetch-value* obj) t))
           (:store (values (wrap-task #'store-value* obj) t))
           (:stop (values default nil))
-          (otherwise (let ((action (gethash (message-head obj) *actions*)))
-                       (if action
-                           (values (wrap-task (action-task action) obj) t)
-                           (values (lambda () :not-found) t)))))
+          (otherwise (let ((action (gethash (message-head obj) *actions* nil)))
+                       (values (wrap-task (action-task action) obj) t))))
         (values (lambda () :invalid-message) t))))
 
 (-> wrap-task (function message) function)
@@ -113,6 +111,7 @@
   (let ((message-context (message-context msg))
         (action (gethash (message-head msg) *actions*)))
     (cond ((valid-predefined-message-p msg) t)
+          ((null action) nil)
           ((eq (action-context action) :any) t)
           ((eql message-context (action-context action)) t)
           (t nil))))

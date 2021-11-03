@@ -29,6 +29,16 @@
     (is (= 5 (send* actor (msg :sum 2 3))))
     (send actor (msg :stop))))
 
+(test invalid-message
+  (let ((actor (spawn (action :self-address (lambda () *self*) :sync))))
+    (is (eq :invalid-message (send actor (msg :self-address))))
+    (send actor (msg :stop))))
+
+(test non-existent-action
+  (let ((actor (spawn)))
+    (is (eq :invalid-message (send actor (msg :foo))))
+    (send actor (msg :stop))))
+
 (test self-address
   (let ((actor (spawn (action :get-self (lambda () *self*) :sync))))
     (is (string-equal actor (send* actor (msg :get-self))))
