@@ -5,6 +5,10 @@
 (defparameter *storage* nil)
 (defparameter *storage-lock* (bt:make-lock "storage lock"))
 
+(defparameter
+    *print-internal-actor-error-messages* nil
+  "if not nil, print error messages when they occur inside an actor")
+
 ;;;
 ;;; Storage
 ;;;
@@ -67,7 +71,8 @@
                                  (unless continue?
                                    (return))))
                  (error (c)
-                   (declare (ignore c))
+                   (when *print-internal-actor-error-messages*
+                     (princ c))
                    (pzmq:send socket (conspack:encode :internal-error))))))))
 
 ;;;
@@ -95,8 +100,10 @@
                   ;; we don't care about errors inside the task execution thread
                   (bt:make-thread
                    (lambda ()
-                     (ignore-errors
-                      (apply task (message-body message))))))
+                     (handler-case (apply task (message-body message))
+                       (error (e)
+                         (when *print-internal-actor-error-messages*
+                           (princ e)))))))
               :ok))
     (:sync (lambda ()
              (handler-case (apply task (message-body message))
