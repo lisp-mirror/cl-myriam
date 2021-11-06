@@ -15,5 +15,5 @@
            :*target-public-identity* :*current-self-identity*
            :make-self-identity :self->public-identity
            :*print-internal-actor-error-messages*
-           :change-host)
+           :change-host :all-actors :stop-all-actors)
   (:use :cl))

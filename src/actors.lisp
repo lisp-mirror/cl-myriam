@@ -53,7 +53,7 @@
     (with-actor-parameters
         (let ((thread (bt:make-thread
                        #'actor-loop
-                       :name (concatenate 'string "actor-" *self*))))
+                       :name (concatenate 'string "#myriam.actor-" *self*))))
           (values *self* thread)))))
 
 (defun actor-loop ()

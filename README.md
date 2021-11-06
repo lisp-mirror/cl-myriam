@@ -119,6 +119,18 @@ Dynamic variable useful for referring to an actor's self address.
 
 Replace the host in `address` for `new-host`.
 
+## `all-actors`
+
+`(all-actors) -> list`
+
+Get a list of all local actors.
+
+## `stop-all-actors`
+
+`(stop-all-actors)`
+
+Stop all local actors.
+
 # Notes
 
 ## Current limitations/caveats
