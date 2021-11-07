@@ -16,6 +16,8 @@
            :with-self-identity :with-target-identity
            :*target-public-identity* :*current-self-identity*
            :make-self-identity :self->public-identity
+           :public-identity :public-identity-key :public-identity-hash
+           :self-identity :self-identity-public-key :self-identity-secret-key :self-identity-hash
            :*print-internal-actor-error-messages*
            :change-host :all-actors :stop-all-actors)
   (:use :cl))
