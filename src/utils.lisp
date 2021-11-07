@@ -9,11 +9,15 @@
   (if (and (integerp timeout) (> timeout 0))
       `(progn
          (kernel-setup)
-         (let ((channel (lparallel:make-channel)))
-           (lparallel:submit-task channel (lambda () (progn ,@body)))
-           (lparallel:try-receive-result channel :timeout ,timeout)))
+         (let ((lparallel:*task-category* (format nil "~a" (uuid:make-v4-uuid))))
+           (let ((channel (lparallel:make-channel)))
+             (lparallel:submit-task channel (lambda () ,@body))
+             (multiple-value-bind (result received-p)
+                 (lparallel:try-receive-result channel :timeout ,timeout)
+               (unless received-p
+                 (lparallel:kill-tasks lparallel:*task-category*))
+               result))))
       (error 'syntax-error)))
-
 
 (defun all-actors ()
   (let ((thread-names (mapcar #'bt:thread-name (bt:all-threads))))

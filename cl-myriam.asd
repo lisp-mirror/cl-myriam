@@ -11,6 +11,7 @@
                :pzmq
                :serapeum
                :str
+               :uuid
                :usocket
                :sha3)
   :encoding :utf-8
