@@ -33,11 +33,13 @@
 ;;;
 (defmacro with-actor-parameters (&rest body)
   `(let ((bt:*default-special-bindings*
-           `((*self* . ,*self*)
-             (*storage* . ,*storage*)
-             (*storage-lock* . ,*storage-lock*)
-             (*actions* . ,*actions*)
-             (*current-self-identity* . ,*current-self-identity*))))
+           (append
+            `((*self* . ,*self*)
+              (*storage* . ,*storage*)
+              (*storage-lock* . ,*storage-lock*)
+              (*actions* . ,*actions*)
+              (*current-self-identity* . ,*current-self-identity*))
+            bt:*default-special-bindings*)))
      ,@body))
 
 (-> spawn (&rest action) (values string bt:thread))

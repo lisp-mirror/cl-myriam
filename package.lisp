@@ -13,16 +13,30 @@
   (:import-from :ppcre :create-scanner :scan-to-strings)
   (:import-from :uuid :make-v4-uuid)
   (:import-from :babel :string-to-octets :octets-to-string)
-  (:export :action :msg :spawn :send :send* :*self*
-           :with-self-identity :with-target-identity
-           :*target-public-identity* :*current-self-identity*
-           :make-self-identity :self->public-identity
-           :public-identity :public-identity-key :public-identity-hash
-           :self-identity :self-identity-public-key :self-identity-secret-key :self-identity-hash
-           :*send-timeout*
-           :*print-internal-actor-error-messages*
-           :change-host :all-actors :stop-all-actors
-           :spawn-authenticator
-           :kill-authenticator
-           :authenticator-alive-p)
+  (:export
+   ;; core functionlity
+   :action :msg :spawn :send :send* :*self*
+
+   ;; identity
+   :with-self-identity :with-target-identity
+   :*target-public-identity* :*current-self-identity*
+   :make-self-identity :self->public-identity
+   :public-identity :public-identity-key :public-identity-hash
+   :self-identity :self-identity-public-key :self-identity-secret-key :self-identity-hash
+
+   ;; context
+   :with-new-context
+
+   ;; utils
+   :*send-timeout*
+   :*print-internal-actor-error-messages*
+   :change-host
+
+   ;; actor query
+   :all-actors :stop-all-actors
+
+   ;; authentication
+   :spawn-authenticator
+   :kill-authenticator
+   :authenticator-alive-p)
   (:use :cl))

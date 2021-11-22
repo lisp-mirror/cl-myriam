@@ -1,11 +1,11 @@
 (in-package :cl-user)
 (asdf:defsystem cl-myriam
-  :description "Simple actor model implementation for local and non-local actors"
+  :description "Simple actor model implementation for local and remote actors"
   :licence "3-clause BSD"
   :version "0.1.1"
   :author "Ariela Wenner"
-  :depends-on (:bordeaux-threads
-               :babel
+  :depends-on (:babel
+               :bordeaux-threads
                :cl-conspack
                :cl-ppcre
                :lparallel

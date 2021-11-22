@@ -117,17 +117,42 @@ Time to wait for a reply before killing the connection.
 
 ## Authentication
 
+By default, actors accept all incoming messages. You need to spawn an authenticator to filter out connections based on host and identities.
+
 ### `spawn-authenticator`
 
 `(spawn-authenticator accept-p) -> bt:thread`
 
-Spawn an authenticator (a ZAP server). `accept-p` should be a predicate which takes an IP address and the public key of the authenticating client (as a byte vector); an incoming connection will be either accepted or rejected based on the result of `accept-p`.
+Spawn an authenticator (a ZAP server). `accept-p` should be a predicate which takes an IP address and the public key of the authenticating client (as a byte vector); an incoming connection will be either accepted or rejected based on the result of `accept-p`. You can only spawn a single authenticator per context, see below.
 
 ### `kill authenticator`
 
 `(kill-authenticator)`
 
 Kill the authenticator and its ZAP server.
+
+## Contexts
+
+Contexts allow you to separate actor groups with different authentication parameters. Without contexts, you're limited to one authenticator per application.
+
+``` common-lisp
+(defparameter a
+  (myr:with-new-context
+    (let ((authenticator (myr:spawn-authenticator
+                          (lambda (ip key)
+                            (declare (ignore key))
+                            (string= ip "127.0.0.1")))))
+      (declare (ignore authenticator))
+      (myr:spawn))))
+```
+
+In this example, `a` will only accept connections from `localhost`.
+
+### `with-new-context`
+
+`(with-new-context &body forms)`
+
+Execute `forms` in a fresh context. Mostly used to spawn actors under an authenticator with specific parameters.
 
 ### `authenticator-alive-p`
 
