@@ -8,11 +8,19 @@
 (def-suite :myriam)
 (in-suite :myriam)
 
+(defparameter auth-thread
+  (spawn-authenticator
+   (lambda (ip pk)
+     (declare (ignore pk))
+     (if (string= ip "127.0.0.1")
+         t
+         nil))))
+
+(test auth-thread
+  (is (bt:threadp auth-thread)))
+
 (setf myr:*current-self-identity* (myr:make-self-identity))
 (setf myr:*target-public-identity* (myr:self->public-identity myr:*current-self-identity*))
-
-(defun run-tests ()
-  (5am:run! :myriam))
 
 (test actor-spawn
   (let ((actor (spawn)))
@@ -66,3 +74,6 @@
     (is (equalp (list "a" "b" "c" "d" "e")
                 (mapcar get-stuff (list a b c d e))))
     (mapcar stop (list a b c d e))))
+
+(test kill-authenticator
+  (kill-authenticator))

@@ -57,23 +57,23 @@
           (values *self* thread)))))
 
 (defun actor-loop ()
-  (pzmq:with-context nil
-    (pzmq:with-socket socket
-        (:rep
-         :curve-server 1
-         :curve-publickey (self-identity-public-key *current-self-identity*)
-         :curve-secretkey (self-identity-secret-key *current-self-identity*))
-      (pzmq:bind socket (address->binding *self*))
-      (loop for raw-msg = (pzmq:recv-octets socket)
-            do (handler-case (let ((msg (conspack:decode raw-msg)))
-                               (multiple-value-bind (proc continue?) (message-handle msg)
-                                 (pzmq:send socket (conspack:encode (funcall proc)))
-                                 (unless continue?
-                                   (return))))
-                 (error (c)
-                   (when *print-internal-actor-error-messages*
-                     (princ c))
-                   (pzmq:send socket (conspack:encode :internal-error))))))))
+  (pzmq:with-socket (socket *context*)
+      (:rep
+       :curve-server t
+       :zap-domain "domain"
+       :curve-publickey (self-identity-public-key *current-self-identity*)
+       :curve-secretkey (self-identity-secret-key *current-self-identity*))
+    (pzmq:bind socket (address->binding *self*))
+    (loop for raw-msg = (pzmq:recv-octets socket)
+          do (handler-case (let ((msg (conspack:decode raw-msg)))
+                             (multiple-value-bind (proc continue?) (message-handle msg)
+                               (pzmq:send socket (conspack:encode (funcall proc)))
+                               (unless continue?
+                                 (return))))
+               (error (c)
+                 (when *print-internal-actor-error-messages*
+                   (princ c))
+                 (pzmq:send socket (conspack:encode :internal-error)))))))
 
 ;;;
 ;;; Message handling

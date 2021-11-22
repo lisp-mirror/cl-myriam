@@ -2,7 +2,7 @@
 
 `myriam` is a simple attempt at implementing the [actor model](https://en.wikipedia.org/wiki/Actor_model) for secure, distributed programming. Feedback is very welcome!
 
-This is a Common Lisp port of my `myriam` Chicken Scheme egg. It's already at feature parity with its Scheme sister, aside from the ability to send functions/closures (and obviously, no continuations either), and uses ZMQ instead of NNG for messaging, which means we can make use of CurveZMQ for easier encryption (and eventually authentication too).
+This is a Common Lisp port of my `myriam` Chicken Scheme egg. It's already at feature parity with its Scheme sister, aside from the ability to send functions/closures (and obviously, no continuations either), and uses ZMQ instead of NNG for messaging, which means we can make use of CurveZMQ for easier encryption and (some) authentication.
 
 The API is very much unstable at the moment.
 
@@ -110,6 +110,28 @@ Fetch a value from an actor's internal storage, or `nil` of there is no such val
 ### `*self*`
 
 Dynamic variable useful for referring to an actor's self address.
+
+### `*send-timeout*`
+
+Time to wait for a reply before killing the connection.
+
+## Authentication
+
+### `spawn-authenticator`
+
+`(spawn-authenticator accept-p) -> bt:thread`
+
+Spawn an authenticator (a ZAP server). `accept-p` should be a predicate which takes an IP address and the public key of the authenticating client (as a byte vector); an incoming connection will be either accepted or rejected based on the result of `accept-p`.
+
+### `kill authenticator`
+
+`(kill-authenticator)`
+
+Kill the authenticator and its ZAP server.
+
+### `authenticator-alive-p`
+
+`(authenticator-alive-p) -> boolean`
 
 ## Utilities
 

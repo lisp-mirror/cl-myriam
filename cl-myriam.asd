@@ -2,9 +2,10 @@
 (asdf:defsystem cl-myriam
   :description "Simple actor model implementation for local and non-local actors"
   :licence "3-clause BSD"
-  :version "0.1.0"
+  :version "0.1.1"
   :author "Ariela Wenner"
   :depends-on (:bordeaux-threads
+               :babel
                :cl-conspack
                :cl-ppcre
                :lparallel
@@ -24,6 +25,8 @@
      (:file "conditions")
      (:file "address")
      (:file "identity")
+     (:file "context")
+     (:file "authentication")
      (:file "messaging")
      (:file "action")
      (:file "actors"))))
