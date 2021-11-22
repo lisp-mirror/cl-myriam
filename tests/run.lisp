@@ -8,13 +8,18 @@
 (def-suite :myriam)
 (in-suite :myriam)
 
-(defparameter auth-thread
-  (spawn-authenticator
-   (lambda (ip pk)
-     (declare (ignore pk))
-     (if (string= ip "127.0.0.1")
-         t
-         nil))))
+(defparameter auth-thread nil)
+(defparameter auth-name nil)
+
+(multiple-value-bind (thread name)
+    (spawn-authenticator
+     (lambda (ip pk)
+       (declare (ignore pk))
+       (if (string= ip "127.0.0.1")
+           t
+           nil)))
+  (setf auth-thread thread)
+  (setf auth-name name))
 
 (test auth-thread
   (is (bt:threadp auth-thread)))
@@ -76,4 +81,4 @@
     (mapcar stop (list a b c d e))))
 
 (test kill-authenticator
-  (kill-authenticator))
+  (kill-authenticator auth-name))

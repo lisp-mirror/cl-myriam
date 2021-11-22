@@ -30,3 +30,6 @@
   (mapcar (lambda (actor)
             (send actor (msg :stop)))
           (all-actors)))
+
+(defun string-uuid ()
+  (format nil "~a" (uuid:make-v4-uuid)))

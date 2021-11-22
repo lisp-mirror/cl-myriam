@@ -121,15 +121,15 @@ By default, actors accept all incoming messages. You need to spawn an authentica
 
 ### `spawn-authenticator`
 
-`(spawn-authenticator accept-p) -> bt:thread`
+`(spawn-authenticator accept-p &optional name) -> (values bt:thread name)`
 
-Spawn an authenticator (a ZAP server). `accept-p` should be a predicate which takes an IP address and the public key of the authenticating client (as a byte vector); an incoming connection will be either accepted or rejected based on the result of `accept-p`. You can only spawn a single authenticator per context, see below.
+Spawn an authenticator (a ZAP server). `accept-p` should be a predicate which takes an IP address and the public key of the authenticating client (as a byte vector); an incoming connection will be either accepted or rejected based on the result of `accept-p`. Name shoule be a unique string and it can be used for terminating the authenticator. You can only spawn a single authenticator per context, see below.
 
 ### `kill authenticator`
 
-`(kill-authenticator)`
+`(kill-authenticator name)`
 
-Kill the authenticator and its ZAP server.
+Kill the given authenticator.
 
 ## Contexts
 

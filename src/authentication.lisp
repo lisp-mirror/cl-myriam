@@ -28,8 +28,11 @@
               (pzmq:send socket (babel:string-to-octets "none") :sndmore t)
               (pzmq:send socket nil)))))))
 
-(-> spawn-authenticator (function) bt:thread)
-(defun spawn-authenticator (accept-p)
+(-> spawn-authenticator (function &optional string) bt:thread)
+(defun spawn-authenticator (accept-p &optional (name (string-uuid)))
+  "Spawn an authenticator that will use accept-p (which should be a predicate that takes an IP address
+   and a public key as a byte vector) to either accept or reject incoming connections. Name, if given,
+   should be a unique string."
   ;; TODO: figure out a better way to shut down an authenticator
   (pzmq:with-socket (listener *context*) :pair
     ;; we want to be absolutely sure that the authenticator is ready before returning
@@ -42,23 +45,28 @@
                          (pzmq:connect heartbeat "inproc://auth-sync")
                          (pzmq:send heartbeat "READY"))
                        (loop do (receive-and-process-auth-request authenticator accept-p))))
-                   :name "#myriam.auth-thread")))
+                   :name (concatenate 'string "#myriam.auth-thread-" name))))
       (pzmq:recv-string listener)
-      thread)))
+      (values thread name))))
 
-(defun authenticator-thread ()
-  (car (remove-if-not
-        (lambda (thread)
-          (string= "#myriam.auth-thread" (bt:thread-name thread)))
-        (bt:all-threads))))
+(-> authenticator-thread (string) (or null bt:thread))
+(defun authenticator-thread (name)
+  (car (remove-if-not (lambda (thread)
+                        (let ((thread-name (bt:thread-name thread)))
+                          (and (str:containsp "#myriam.actor" thread-name)
+                               (str:containsp name thread-name))))
+                      (bt:all-threads))))
 
-(defun kill-authenticator ()
-  (let ((auth-thread (authenticator-thread)))
+(-> kill-authenticator (string) *)
+(defun kill-authenticator (name)
+  (let ((auth-thread (authenticator-thread name)))
     (when (and auth-thread (bt:thread-alive-p auth-thread))
       (bt:destroy-thread auth-thread))))
 
-(defun authenticator-alive-p ()
-  (let ((auth-thread (authenticator-thread)))
+
+(-> authenticator-alive-p (string) (values boolean &optional))
+(defun authenticator-alive-p (name)
+  (let ((auth-thread (authenticator-thread name)))
     (if auth-thread
         (bt:thread-alive-p auth-thread)
         nil)))
