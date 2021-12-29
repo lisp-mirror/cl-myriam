@@ -53,8 +53,8 @@
 (defun authenticator-thread (name)
   (car (remove-if-not (lambda (thread)
                         (let ((thread-name (bt:thread-name thread)))
-                          (and (str:containsp "#myriam.actor" thread-name)
-                               (str:containsp name thread-name))))
+                          (string= thread-name
+                                   (concatenate 'string "#myriam.auth-thread-" name))))
                       (bt:all-threads))))
 
 (-> kill-authenticator (string) *)

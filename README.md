@@ -131,6 +131,12 @@ Spawn an authenticator (a ZAP server). `accept-p` should be a predicate which ta
 
 Kill the given authenticator.
 
+### `authenticator-alive-p`
+
+`(authenticator-alive-p name) -> boolean`
+
+Test if the authenticator with the given name is alive.
+
 ## Contexts
 
 Contexts allow you to separate actor groups with different authentication parameters. Without contexts, you're limited to one authenticator per application.
@@ -153,10 +159,6 @@ In this example, `a` will only accept connections from `localhost`.
 `(with-new-context &body forms)`
 
 Execute `forms` in a fresh context. Mostly used to spawn actors under an authenticator with specific parameters.
-
-### `authenticator-alive-p`
-
-`(authenticator-alive-p) -> boolean`
 
 ## Utilities
 

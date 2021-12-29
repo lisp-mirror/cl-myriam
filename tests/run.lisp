@@ -22,7 +22,7 @@
   (setf auth-name name))
 
 (test auth-thread
-  (is (bt:threadp auth-thread)))
+  (is (myr:authenticator-alive-p auth-name)))
 
 (setf myr:*current-self-identity* (myr:make-self-identity))
 (setf myr:*target-public-identity* (myr:self->public-identity myr:*current-self-identity*))
@@ -81,4 +81,6 @@
     (mapcar stop (list a b c d e))))
 
 (test kill-authenticator
-  (kill-authenticator auth-name))
+  (kill-authenticator auth-name)
+  (sleep 0.25)
+  (is (not (myr:authenticator-alive-p auth-name))))
