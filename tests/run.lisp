@@ -8,22 +8,6 @@
 (def-suite :myriam)
 (in-suite :myriam)
 
-(defparameter auth-thread nil)
-(defparameter auth-name nil)
-
-(multiple-value-bind (thread name)
-    (spawn-authenticator
-     (lambda (ip pk)
-       (declare (ignore pk))
-       (if (string= ip "127.0.0.1")
-           t
-           nil)))
-  (setf auth-thread thread)
-  (setf auth-name name))
-
-(test auth-thread
-  (is (myr:authenticator-alive-p auth-name)))
-
 (setf myr:*current-self-identity* (myr:make-self-identity))
 (setf myr:*target-public-identity* (myr:self->public-identity myr:*current-self-identity*))
 
@@ -80,7 +64,22 @@
                 (mapcar get-stuff (list a b c d e))))
     (mapcar stop (list a b c d e))))
 
-(test kill-authenticator
-  (kill-authenticator auth-name)
-  (sleep 0.25)
-  (is (not (myr:authenticator-alive-p auth-name))))
+(test authenticator
+  (myr:with-new-context
+    (multiple-value-bind (thread name)
+        (spawn-authenticator
+         (lambda (ip pk)
+           (declare (ignore pk))
+           (if (string= ip "127.0.0.1")
+               t
+               nil))
+         "authenticator")
+      (declare (ignore thread))
+      (is (string= name "authenticator"))
+      (is (authenticator-alive-p name))
+      (let ((actor (spawn)))
+        (is (eq :pong (send actor (msg :ping))))
+        (send actor (msg :stop))
+        (kill-authenticator name)
+        (sleep 0.5)
+        (is (not (authenticator-alive-p name)))))))
