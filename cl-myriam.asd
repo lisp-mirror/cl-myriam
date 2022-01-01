@@ -2,7 +2,7 @@
 (asdf:defsystem cl-myriam
   :description "Simple actor model implementation for local and remote actors"
   :licence "3-clause BSD"
-  :version "0.1.2"
+  :version "0.1.3"
   :author "Ariela Wenner"
   :depends-on (:babel
                :bordeaux-threads

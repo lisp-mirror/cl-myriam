@@ -14,14 +14,14 @@
 ;;;
 ;;; protect storage access inside an actor,
 ;;; since different tasks may access it concurrently
-(-> fetch-value* (keyword) *)
+(-> fetch-value* (keyword) t)
 (defun fetch-value* (key)
   (bt:acquire-lock *storage-lock*)
   (unwind-protect
        (gethash key *storage*)
     (bt:release-lock *storage-lock*)))
 
-(-> store-value* (keyword *) *)
+(-> store-value* (keyword t) t)
 (defun store-value* (key value)
   (bt:acquire-lock *storage-lock* t)
   (unwind-protect
