@@ -74,7 +74,6 @@
                t
                nil))
          "authenticator")
-      (declare (ignore thread))
       (is (string= name "authenticator"))
       (is (authenticator-alive-p name))
       (let ((actor (spawn)))
@@ -82,4 +81,5 @@
         (send actor (msg :stop))
         (kill-authenticator name)
         (sleep 0.5)
-        (is (not (authenticator-alive-p name)))))))
+        (is (not (authenticator-alive-p name)))
+        (is (not (bt:thread-alive-p thread)))))))
