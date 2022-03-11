@@ -23,7 +23,11 @@ Myriam stands on the shoulders of giants.
 
 # Usage
 
-Load the `:cl-myriam` system and require the `:myriam` package. Everything you need is in there.
+`cl-myriam` is on [Quicklisp](https://www.quicklisp.org/beta/), so you can load it with `(ql:quickload :cl-myriam)`.
+
+Otherwise, you can load the `:cl-myriam` system directly and require the `:myriam` package. Everything you need is in there.
+
+Make sure to check the tests folder for examples.
 
 ## `spawn`
 
